@@ -3,3 +3,16 @@
 .RData
 .Ruserdata
 .httr-oauth
+
+# Local backups
+/backups/
+# Local environment and credentials
+.Renviron
+# R and RStudio state
+.Rproj.user/
+# Temporary files
+.DS_Store
+*.log
+*.tmp
+/data/sevenday_combined_1.csv
+/data/sevenday_combined_2.csv

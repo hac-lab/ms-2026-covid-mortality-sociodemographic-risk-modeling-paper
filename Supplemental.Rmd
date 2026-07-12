@@ -1,7 +1,7 @@
 ---
 title: "Supplemental Materials: Predictive Spatial Modeling of Sociodemographic Risk for COVID-19 Mortality"
 author: "Erich Seamon, Benjamin J. Ridenhour, Craig R. Miller, Jennifer-Johnson Leung"
-date: "01/10/2025"
+date: "09/02/2025"
 always_allow_html: yes
 output:
   pdf_document:
@@ -26,6 +26,7 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=8.5)
 knitr::opts_knit$set(root.dir = "/mnt/ceph/erichs/git/COVIDriskpaper/")  # with something else than `getwd()`
 #knitr::opts_knit$set(root.dir = "/Users/erichseamon/Dropbox/Mac/Documents/GitHub/COVIDriskpaper/")
+Sys.setenv(CHROMOTE_CHROME = "/mnt/ceph/erichs/chrome-bin/chrome-linux64/chrome")
 ```
 \newpage
 # Appendix Overview
@@ -95,7 +96,7 @@ For the initial portion of our analysis, we examine COVID-19 cases and deaths fo
 
 <center>
 
-![](./figures/FigS1_hhs_regions.png){#id .class width=100% height=100%}  
+![](./figures/FigS1_hhs_regions.png){#id .class width=90%}  
 
 </center>
 
@@ -313,7 +314,7 @@ Using this framework, we constructed three (3) temporal model time frames:
 
 <center>
 
-![](./figures/FigS2_model.png){#id .class width=100% height=100%}  
+![](./figures/FigS2_model.png){#id .class width=90%}  
 
 </center>
 \newpage
@@ -327,6 +328,7 @@ Using this framework, we constructed three (3) temporal model time frames:
 library(spdep)
 library(sp)
 library(sf)
+library(car)
 
 states <- sf::read_sf("./data/states/states.shp")
 states <- as_Spatial(states)
@@ -1096,7 +1098,7 @@ my_palette <- colorRampPalette(c("blue", "white", "red"))(n = 5)
 
 newpvals <- p.adjust(c(cf1[,4], cf2[,4], cf3[,4], cf4[,4], cf5[,4], cf6[,4], cf7[,4], cf8[,4], cf9[,4], cf10[,4], cf1_delta[,4], cf2_delta[,4], cf3_delta[,4], cf4_delta[,4], cf5_delta[,4], cf6_delta[,4], cf7_delta[,4], cf8_delta[,4], cf9_delta[,4], cf10_delta[,4], cf1_omicron[,4], cf2_omicron[,4], cf3_omicron[,4], cf4_omicron[,4], cf5_omicron[,4], cf6_omicron[,4], cf7_omicron[,4], cf8_omicron[,4], cf9_omicron[,4], cf10_omicron[,4]))
 
-newpvals[newpvals > .05] <- NA
+#newpvals[newpvals > .05] <- NA
 
 cf1[,4] <- newpvals[1:16]
 cf2[,4] <- newpvals[17:32]
@@ -1109,6 +1111,17 @@ cf8[,4] <- newpvals[113:128]
 cf9[,4] <- newpvals[129:144]
 cf10[,4] <- newpvals[145:160]
 
+cf1 <- cbind(cf1,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[1]])))),"VIF"))
+cf2 <- cbind(cf2,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[2]])))),"VIF"))
+cf3 <- cbind(cf3,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[3]])))),"VIF"))
+cf4 <- cbind(cf4,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[4]])))),"VIF"))
+cf5 <- cbind(cf5,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[5]])))),"VIF"))
+cf6 <- cbind(cf6,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[6]])))),"VIF"))
+cf7 <- cbind(cf7,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[7]])))),"VIF"))
+cf8 <- cbind(cf8,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[8]])))),"VIF"))
+cf9 <- cbind(cf9,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[9]])))),"VIF"))
+cf10 <- cbind(cf10,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths[[10]])))),"VIF"))
+
 cf1_delta[,4] <- newpvals[161:176]
 cf2_delta[,4] <- newpvals[177:192]
 cf3_delta[,4] <- newpvals[193:208]
@@ -1120,6 +1133,17 @@ cf8_delta[,4] <- newpvals[273:288]
 cf9_delta[,4] <- newpvals[289:304]
 cf10_delta[,4] <- newpvals[305:320]
 
+cf1_delta <- cbind(cf1_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[1]])))),"VIF"))
+cf2_delta <- cbind(cf2_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[2]])))),"VIF"))
+cf3_delta <- cbind(cf3_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[3]])))),"VIF"))
+cf4_delta <- cbind(cf4_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[4]])))),"VIF"))
+cf5_delta <- cbind(cf5_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[5]])))),"VIF"))
+cf6_delta <- cbind(cf6_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[6]])))),"VIF"))
+cf7_delta <- cbind(cf7_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[7]])))),"VIF"))
+cf8_delta <- cbind(cf8_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[8]])))),"VIF"))
+cf9_delta <- cbind(cf9_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[9]])))),"VIF"))
+cf10_delta <- cbind(cf10_delta,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_delta[[10]])))),"VIF"))
+
 cf1_omicron[,4] <- newpvals[321:336]
 cf2_omicron[,4] <- newpvals[337:352]
 cf3_omicron[,4] <- newpvals[353:368]
@@ -1130,6 +1154,18 @@ cf7_omicron[,4] <- newpvals[417:432]
 cf8_omicron[,4] <- newpvals[433:448]
 cf9_omicron[,4] <- newpvals[449:464]
 cf10_omicron[,4] <- newpvals[465:480]
+
+cf1_omicron <- cbind(cf1_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[1]])))),"VIF"))
+cf2_omicron <- cbind(cf2_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[2]])))),"VIF"))
+cf3_omicron <- cbind(cf3_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[3]])))),"VIF"))
+cf4_omicron <- cbind(cf4_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[4]])))),"VIF"))
+cf5_omicron <- cbind(cf5_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[5]])))),"VIF"))
+cf6_omicron <- cbind(cf6_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[6]])))),"VIF"))
+cf7_omicron <- cbind(cf7_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[7]])))),"VIF"))
+cf8_omicron <- cbind(cf8_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[8]])))),"VIF"))
+cf9_omicron <- cbind(cf9_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[9]])))),"VIF"))
+cf10_omicron <- cbind(cf10_omicron,setNames(as.data.frame(c(NA, as.numeric(vif(model_ideology_deaths_omicron[[10]])))),"VIF"))
+
 
 coef_list <- list(cf1, cf2, cf3, cf4, cf5, cf6, cf7, cf8, cf9, cf10, cf1_delta, cf2_delta, cf3_delta, cf4_delta, cf5_delta, cf6_delta, cf7_delta, cf8_delta, cf9_delta, cf10_delta, cf1_omicron, cf2_omicron, cf3_omicron, cf4_omicron, cf5_omicron, cf6_omicron, cf7_omicron, cf8_omicron, cf9_omicron, cf10_omicron)
 
@@ -1169,6 +1205,85 @@ coef_list <- list(cf1, cf2, cf3, cf4, cf5, cf6, cf7, cf8, cf9, cf10, cf1_delta, 
 # cf10_omicron[,4] <- newpvals_coef[465:480]
 # 
 # coef_list_coef <- list(cf1, cf2, cf3, cf4, cf5, cf6, cf7, cf8, cf9, cf10, cf1_delta, cf2_delta, cf3_delta, cf4_delta, cf5_delta, cf6_delta, cf7_delta, cf8_delta, cf9_delta, cf10_delta, cf1_omicron, cf2_omicron, cf3_omicron, cf4_omicron, cf5_omicron, cf6_omicron, cf7_omicron, cf8_omicron, cf9_omicron, cf10_omicron)
+
+#--overdispersion calculation
+
+#--overdispersion ratio calculation
+
+overdispersion_ratio <- function(model) {
+     sum(residuals(model, type = "pearson")^2) / df.residual(model)
+}
+
+USlist1_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[1])))
+Region1_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[2])))
+Region2_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[3])))
+Region3_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[4])))
+Region4_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[5])))
+Region5_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[6])))
+Region6_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[7])))
+Region7_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[8])))
+Region8_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[9])))
+Region9_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[10])))
+
+USlist1_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[1])))
+Region1_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[2])))
+Region2_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[3])))
+Region3_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[4])))
+Region4_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[5])))
+Region5_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[6])))
+Region6_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[7])))
+Region7_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[8])))
+Region8_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[9])))
+Region9_dispersion_delta <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[10])))
+
+USlist1_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[1])))
+Region1_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[2])))
+Region2_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[3])))
+Region3_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[4])))
+Region4_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[5])))
+Region5_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[6])))
+Region6_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[7])))
+Region7_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[8])))
+Region8_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[9])))
+Region9_dispersion_omicron <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[10])))
+
+
+
+overdispersion_list_alpha <- cbind(USlist1_dispersion, Region1_dispersion,Region2_dispersion,Region3_dispersion,Region4_dispersion,Region5_dispersion,Region6_dispersion,Region7_dispersion,Region8_dispersion,Region9_dispersion)
+
+overdispersion_list_delta <- cbind(USlist1_dispersion_delta, Region1_dispersion_delta,Region2_dispersion_delta,Region3_dispersion_delta,Region4_dispersion_delta,Region5_dispersion_delta,Region6_dispersion_delta,Region7_dispersion_delta,Region8_dispersion_delta,Region9_dispersion_delta)
+
+overdispersion_list_omicron <- cbind(USlist1_dispersion_omicron, Region1_dispersion_omicron,Region2_dispersion_omicron,Region3_dispersion_omicron,Region4_dispersion_omicron,Region5_dispersion_omicron,Region6_dispersion_omicron,Region7_dispersion_omicron,Region8_dispersion_omicron,Region9_dispersion_omicron)
+
+overdispersion_list <- rbind(overdispersion_list_alpha, overdispersion_list_delta, overdispersion_list_omicron)
+rownames(overdispersion_list) <- c("Alpha", "Delta", "Omicron")
+
+
+#VIF
+
+alpha_VIF <- as.data.frame(c(cf1[5],cf2[5],cf3[5],cf4[5],cf5[5],cf6[5],cf7[5],cf8[5],cf9[5],cf10[5]))
+delta_VIF <- as.data.frame(c(cf1_delta[5],cf2_delta[5],cf3_delta[5],cf4_delta[5],cf5_delta[5],cf6_delta[5],cf7_delta[5],cf8_delta[5],cf9_delta[5],cf10_delta[5]))
+omicron_VIF <- as.data.frame(c(cf1_omicron[5],cf2_omicron[5],cf3_omicron[5],cf4_omicron[5],cf5_omicron[5],cf6_omicron[5],cf7_omicron[5],cf8_omicron[5],cf9_omicron[5],cf10_omicron[5]))
+colnames(alpha_VIF) <- c("US", "Region1&2", "Region3", "Region4", "Region5", "Region6", "Region7", "Region8", "Region9", "Region10")
+colnames(delta_VIF) <- c("US", "Region1&2", "Region3", "Region4", "Region5", "Region6", "Region7", "Region8", "Region9", "Region10")
+colnames(omicron_VIF) <- c("US", "Region1&2", "Region3", "Region4", "Region5", "Region6", "Region7", "Region8", "Region9", "Region10")
+alpha_VIF <- alpha_VIF[-1, , drop = FALSE] 
+delta_VIF <- delta_VIF[-1, , drop = FALSE] 
+omicron_VIF<- omicron_VIF[-1, , drop = FALSE] 
+rownames(alpha_VIF) <- c("Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "65+", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
+rownames(delta_VIF) <- c("Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "65+", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
+rownames(omicron_VIF) <- c("Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "65+", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
+
+alpha_VIF$Variant <- "Alpha"
+delta_VIF$Variant <- "Delta"
+omicron_VIF$Variant <- "Omicron"
+
+allVIF <- rbind(alpha_VIF, delta_VIF, omicron_VIF)
+allVIF$variable <- rownames(allVIF)
+rownames(allVIF) <- NULL
+
+
+
 ```
 
 ## Figure S3: Dataset Visualizations
@@ -1737,9 +1852,9 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[1]))))[,c(1)], coef_list[[1]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[1]))))[,c(1)], coef_list[[11]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[1]))))[,c(1)], coef_list[[21]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[1]))))[,c(1)], coef_list[[1]][,4], coef_list[[1]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[1]))))[,c(1)], coef_list[[11]][,4], coef_list[[11]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[1]))))[,c(1)], coef_list[[21]][,4], coef_list[[21]][,5])
 
 alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[1])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[1])))$null)
 delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[1])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[1])))$null)
@@ -1747,30 +1862,38 @@ omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[1])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[1])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[1])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
-
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist1.jpeg")
+ 
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist1_R.jpeg")
 
 
 ```
 
-![](./html/USlist1.jpeg){#id .class width=100% height=100%}
+![](./html/USlist1.jpeg){#id .class width=90%}
 
-![](./html/USlist1_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist1_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -2004,9 +2127,9 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[2]))))[,c(1)], coef_list[[2]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[2]))))[,c(1)], coef_list[[12]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[2]))))[,c(1)], coef_list[[22]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[2]))))[,c(1)], coef_list[[2]][,4], coef_list[[2]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[2]))))[,c(1)], coef_list[[12]][,4], coef_list[[12]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[2]))))[,c(1)], coef_list[[22]][,4], coef_list[[22]][,5])
 
 alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[2])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[2])))$null)
 delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[2])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[2])))$null)
@@ -2014,32 +2137,39 @@ omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[2])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[2])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[2])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
+USlist[is.na(USlist)] <- 1
+
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist2.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist2.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist2_R.jpeg")
-
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist2_R.jpeg")
 
 ```
 
-![](./html/USlist2.jpeg){#id .class width=100% height=100%}
+![](./html/USlist2.jpeg){#id .class width=90%}
 
-![](./html/USlist2_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist2_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -2237,9 +2367,9 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[3]))))[,c(1)], coef_list[[3]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[3]))))[,c(1)], coef_list[[13]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[3]))))[,c(1)], coef_list[[23]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[3]))))[,c(1)], coef_list[[3]][,4], coef_list[[3]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[3]))))[,c(1)], coef_list[[13]][,4], coef_list[[13]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[3]))))[,c(1)], coef_list[[23]][,4], coef_list[[23]][,5])
 
 alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[3])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[3])))$null)
 delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[3])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[3])))$null)
@@ -2247,29 +2377,39 @@ omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[3])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[3])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[3])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
+
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist3.jpeg")
+ 
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist3_R.jpeg")
 
 
 ```
 
-![](./html/USlist3.jpeg){#id .class width=100% height=100%}
+![](./html/USlist3.jpeg){#id .class width=90%}
 
-![](./html/USlist3_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist3_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -2466,9 +2606,9 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[4]))))[,c(1)], coef_list[[4]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[4]))))[,c(1)], coef_list[[14]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[4]))))[,c(1)], coef_list[[24]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[4]))))[,c(1)], coef_list[[4]][,4], coef_list[[4]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[4]))))[,c(1)], coef_list[[14]][,4], coef_list[[14]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[4]))))[,c(1)], coef_list[[24]][,4], coef_list[[24]][,5])
 
 alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[4])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[4])))$null)
 delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[4])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[4])))$null)
@@ -2476,34 +2616,40 @@ omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[4])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[4])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[4])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist4.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist4.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist4_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist4_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist4.jpeg){#id .class width=100% height=100%}
+![](./html/USlist4.jpeg){#id .class width=90%}
 
-![](./html/USlist4_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist4_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -2693,9 +2839,9 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[5]))))[,c(1)], coef_list[[5]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[5]))))[,c(1)], coef_list[[15]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[5]))))[,c(1)], coef_list[[25]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[5]))))[,c(1)], coef_list[[5]][,4], coef_list[[5]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[5]))))[,c(1)], coef_list[[15]][,4], coef_list[[15]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[5]))))[,c(1)], coef_list[[25]][,4], coef_list[[25]][,5])
 
 alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[5])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[5])))$null)
 delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[5])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[5])))$null)
@@ -2703,33 +2849,39 @@ omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[5])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[5])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[5])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist5.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist5.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist5_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist5_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist5.jpeg){#id .class width=100% height=100%}
+![](./html/USlist5.jpeg){#id .class width=90%}
 
-![](./html/USlist5_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist5_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -2922,44 +3074,50 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[5]))))[,c(1)], coef_list[[5]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[5]))))[,c(1)], coef_list[[15]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[5]))))[,c(1)], coef_list[[25]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[6]))))[,c(1)], coef_list[[6]][,4], coef_list[[6]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[6]))))[,c(1)], coef_list[[16]][,4], coef_list[[16]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[6]))))[,c(1)], coef_list[[26]][,4], coef_list[[26]][,5])
 
-alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[5])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[5])))$null)
-delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[5])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[5])))$null)
-omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[5])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[5])))$null)
+alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[6])))$null)
+delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[6])))$null)
+omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[6])))$null)
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[6])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[6])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[6])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist6.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist6.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist6_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist6_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist6.jpeg){#id .class width=100% height=100%}
+![](./html/USlist6.jpeg){#id .class width=90%}
 
-![](./html/USlist6_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist6_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -3150,43 +3308,50 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[6]))))[,c(1)], coef_list[[6]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[6]))))[,c(1)], coef_list[[16]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[6]))))[,c(1)], coef_list[[26]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[7]))))[,c(1)], coef_list[[7]][,4], coef_list[[7]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[7]))))[,c(1)], coef_list[[17]][,4], coef_list[[17]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[7]))))[,c(1)], coef_list[[27]][,4], coef_list[[27]][,5])
 
-alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[6])))$null)
-delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[6])))$null)
-omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[6])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[6])))$null)
+alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[7])))$null)
+delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[7])))$null)
+omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[7])))$null)
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[7])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[7])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[7])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
+
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist7.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist7.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist7_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist7_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist7.jpeg){#id .class width=100% height=100%}
+![](./html/USlist7.jpeg){#id .class width=90%}
 
-![](./html/USlist7_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist7_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -3386,44 +3551,51 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[7]))))[,c(1)], coef_list[[7]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[7]))))[,c(1)], coef_list[[17]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[7]))))[,c(1)], coef_list[[27]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[8]))))[,c(1)], coef_list[[8]][,4], coef_list[[8]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[8]))))[,c(1)], coef_list[[18]][,4], coef_list[[18]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[8]))))[,c(1)], coef_list[[28]][,4], coef_list[[28]][,5])
 
-alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[7])))$null)
-delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[7])))$null)
-omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[7])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[7])))$null)
+alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[8])))$null)
+delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[8])))$null)
+omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[8])))$null)
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[8])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[8])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[8])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
+
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist8.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist8.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist8_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist8_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist8.jpeg){#id .class width=100% height=100%}
+![](./html/USlist8.jpeg){#id .class width=90%}
 
-![](./html/USlist8_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist8_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -3627,44 +3799,51 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[8]))))[,c(1)], coef_list[[8]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[8]))))[,c(1)], coef_list[[18]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[8]))))[,c(1)], coef_list[[28]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[9]))))[,c(1)], coef_list[[9]][,4], coef_list[[9]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[9]))))[,c(1)], coef_list[[19]][,4], coef_list[[19]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[9]))))[,c(1)], coef_list[[29]][,4], coef_list[[29]][,5])
 
-alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[8])))$null)
-delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[8])))$null)
-omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[8])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[8])))$null)
+alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[9])))$null)
+delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[9])))$null)
+omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[9])))$null)
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[9])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[9])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[9])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
+
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist9.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist9.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist9_R.jpeg")
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist9_R.jpeg")
 
 
 ```
 
 
-![](./html/USlist9.jpeg){#id .class width=100% height=100%}
+![](./html/USlist9.jpeg){#id .class width=90%}
 
-![](./html/USlist9_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist9_R.jpeg){#id .class width=35%}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -3858,43 +4037,49 @@ library(knitr)
 library(kableExtra)
 
 
-alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[9]))))[,c(1)], coef_list[[9]][,4])
-delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[9]))))[,c(1)], coef_list[[19]][,4])
-omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[9]))))[,c(1)], coef_list[[29]][,4])
+alpha_list <- cbind(coef(summary(eval(parse(text=regionlist1_list_ideology_deaths[10]))))[,c(1)], coef_list[[10]][,4], coef_list[[10]][,5])
+delta_list <- cbind(coef(summary(eval(parse(text=regionlist3_list_ideology_deaths[10]))))[,c(1)], coef_list[[20]][,4], coef_list[[20]][,5])
+omicron_list <- cbind(coef(summary(eval(parse(text=regionlist4_list_ideology_deaths[10]))))[,c(1)], coef_list[[30]][,4], coef_list[[30]][,5])
 
-alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[9])))$null)
-delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[9])))$null)
-omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[9])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[9])))$null)
+alpha_pseudoR <- 1 - (summary(eval(parse(text=regionlist1_list_ideology_deaths[10])))$deviance/summary(eval(parse(text=regionlist1_list_ideology_deaths[10])))$null)
+delta_pseudoR <- 1 - (summary(eval(parse(text=regionlist3_list_ideology_deaths[10])))$deviance/summary(eval(parse(text=regionlist3_list_ideology_deaths[10])))$null)
+omicron_pseudoR <- 1 - (summary(eval(parse(text=regionlist4_list_ideology_deaths[10])))$deviance/summary(eval(parse(text=regionlist4_list_ideology_deaths[10])))$null)
 
 USlist_R <- cbind(alpha_pseudoR, delta_pseudoR, omicron_pseudoR)
 USlist_R <- round(USlist_R, 3)
+alpha_dispersion <- overdispersion_ratio(eval(parse(text=regionlist1_list_ideology_deaths[10])))
+delta_dispersion <- overdispersion_ratio(eval(parse(text=regionlist3_list_ideology_deaths[10])))
+omicron_dispersion <- overdispersion_ratio(eval(parse(text=regionlist4_list_ideology_deaths[10])))
+USlist_R_dispersion <- cbind(alpha_dispersion,delta_dispersion,omicron_dispersion)
+USlist_R <- rbind(USlist_R, USlist_R_dispersion)
 colnames(USlist_R) <- c("Alpha Wave", "Delta Wave", "Omicron Wave" )
-rownames(USlist_R) <- "Pseudo R2"
+rownames(USlist_R) <- c("Pseudo R2", "Overdispersion Ratio")
+
 
 USlist <- cbind(alpha_list, delta_list, omicron_list)
-USlist[,c(1,3,5)] <- round(USlist[,c(1,3,5)], 5)
+USlist[,c(1,4,7)] <- round(USlist[,c(1,4,7)], 5)
+USlist[,c(3,6,9)] <- round(USlist[,c(3,6,9)], 2)
 
 rownames(USlist) <- c("Intercept", "Socioeconomic", "Household Composition & Disability", "Housing Type & Transportation", "Unemployed", "Food Insecurity", "Broadband Access", "Diabetes", "Obesity", "Population Density", "Associations", "Age over 65", "Democratic Voting Pct", "Vaccination Rate", "Minority Status and Language", "Uninsured Adults")
 
 
-USlist[,c(2,4,6)] <- signif(USlist[,c(2,4,6)], digits=3)
+USlist[,c(2,5,8)] <- signif(USlist[,c(2,5,8)], digits=3)
 
 USlist <- as.data.frame(USlist)
 
-USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,4,6), ~ cell_spec(., bold = . < .05))) 
-colnames(USlist1) <- c("Estimates", "Adjusted P values",  "Estimates", "Adjusted P values", "Estimates", "Adjusted P values")
+USlist1 <- USlist %>% dplyr::mutate(across(.cols = c(2,5,8), ~ cell_spec(., bold = . < .05))) 
+colnames(USlist1) <- c("Estimates", "Adjusted P values", "VIF",  "Estimates", "Adjusted P values", "VIF", "Estimates", "Adjusted P values", "VIF")
 
-#USlist1 %>%  kable(escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 2, "Delta Wave" = 2, "Omicron Wave" = 2)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist10.jpeg")
+#USlist1 %>%  kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% footnote(general = "Bold = significant value") %>% add_header_above(c(" " = 1,"Alpha Wave" = 3, "Delta Wave" = 3, "Omicron Wave" = 3)) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist10.jpeg")
  
-#USlist_R %>% kable(booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist10_R.jpeg")
-
+#USlist_R %>% kable(format = "html", escape = FALSE, booktabs = TRUE)  %>% kable_classic_2(full_width = F) %>% save_kable("/mnt/ceph/erichs/git/COVIDriskpaper/html/USlist10_R.jpeg")
 
 ```
 
 
-![](./html/USlist10.jpeg){#id .class width=100% height=100%}
+![](./html/USlist10.jpeg){#id .class width=90%}
 
-![](./html/USlist10_R.jpeg){#id .class width=35% height=35%}
+![](./html/USlist10_R.jpeg){#id .class width=35%}
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 # modeloutput_US <- sjPlot::tab_model(eval(parse(text=regionlist1_list_ideology_deaths[10])), eval(parse(text=regionlist3_list_ideology_deaths[10])),  eval(parse(text=regionlist4_list_ideology_deaths[10])), dv.labels = c("Alpha Wave Deaths", "Delta Wave Deaths", "Omicron Wave Deaths"), pred.labels =  c("Intercept", "Socioeconomic", "Household Composition & Disability", "Minority Status & Language", "Housing Type & Transportation", "Political Divergence", "Democratic Voting Pct","Vaccination Rate","Population Density",  "Obesity",  "Uninsured Adults",   "Unemployed",  "Diabetes", "Food Insecurity",  "Social Associations", "Age over 65", "Broadband Access"), show.ci = FALSE, file="/mnt/ceph/erichs/git/COVIDriskpaper/html/modeloutput_PNW.html")
@@ -4054,6 +4239,98 @@ sigtable
 
 \newpage
 
+## Figure S17: Variance Inflation Factor (VIF) Plots
+
+```{r, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
+
+
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+
+# Long format
+allVIF_long <- allVIF %>%
+  pivot_longer(
+    cols = -c(Variant, variable),           # region columns → long
+    names_to  = "Region",
+    values_to = "VIF"
+  ) %>%
+  mutate(
+    Variant  = factor(Variant, levels = c("Alpha","Delta","Omicron")),
+    var_base = str_trim(str_replace(variable, "\\s*\\d+$", ""))  # drop trailing digits
+  )
+
+# One plot: for each predictor (var_base) show 3 side-by-side boxplots (Alpha/Delta/Omicron)
+V1 <- ggplot(
+  allVIF_long,
+  aes(x = var_base, y = VIF, fill = Variant,
+      group = interaction(var_base, Variant))
+) +
+  geom_boxplot(
+    position = position_dodge(width = 0.8),
+    width = 0.6,
+    outlier.size = 0.9
+  ) +
+  geom_hline(yintercept = 5,  linetype = "dashed") +
+  geom_hline(yintercept = 10, linetype = "dotted") +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, 18)) +
+  labs(title = "VIF by Predictor (Alpha / Delta / Omicron)",
+       x = NULL, y = "VIF", fill = "Wave") +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 20),
+    legend.text = element_text(size = 14),
+    axis.text.x = element_text(size = 14, angle = 90, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+
+##region
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Long: one row per (Region, Variant, variable)
+vif_long <- allVIF %>%
+  pivot_longer(
+    cols = -c(Variant, variable),        # region columns → long
+    names_to  = "Region",
+    values_to = "VIF"
+  ) %>%
+  mutate(
+    Variant = factor(Variant, levels = c("Alpha","Delta","Omicron")),
+    Region  = factor(Region)             # set a custom order if you want
+  )
+
+# One plot: x = Variant; side-by-side boxes = Regions (each box summarizes variables)
+V2 <- ggplot(vif_long,
+       aes(x = Variant, y = VIF, fill = Region,
+           group = interaction(Variant, Region))) +
+  geom_boxplot(position = position_dodge(width = 0.85),
+               width = 0.6, outlier.size = 0.8) +
+  geom_hline(yintercept = 5,  linetype = "dashed") +
+  geom_hline(yintercept = 10, linetype = "dotted") +
+  labs(x = NULL, y = "VIF", fill = "Region",
+       title = "VIF by Wave with Regional Distributions") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top",
+        plot.title = element_text(size = 20),
+        legend.text = element_text(size = 14),
+        axis.text.x = element_text(size = 14, angle = 90, hjust = 1),
+        panel.grid.minor = element_blank())
+
+library(gridExtra)
+library(ggplot2)
+
+grid.arrange(V1, V2, ncol = 1, heights = c(1,1)) 
+
+#ggsave("vif_boxplots.pdf", g, width = 10, height = 12, units = "in", device = cairo_pdf)
+# or PNG: ggsave("vif_boxplots.png", g, width = 2000, height = 2400, units = "px", dpi = 300)
+
+
+```
 
 
 ```{r covidrisk_GWRF2, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
@@ -4111,13 +4388,14 @@ counties_merged@data <- cbind(counties_merged@data, rampcols)
 
 ```
 
+\newpage
 
 # Part 4: Spatial Autocorrelation
 
 Morans I is a test of spatial autocorrelation.
 
 \begin{displaymath}
-I = \frac{n}{{{S_0}}}\frac{{\sum\limits_{i = 1}^n {\sum\limits_{j = 1}^n {{w_{ij}}\left( {{x_i} - \overline x } \right)\left( {{x_j} - \overline x } \right)} } }}{{\sum\limits_{i = 1}^n {{{\left( {{x_i} - \overline x } \right)}^2}} }}
+I = \frac{n}{{{W}}}\frac{{\sum\limits_{i = 1}^n {\sum\limits_{j = 1}^n {{w_{ij}}\left( {{x_i} - \overline x } \right)\left( {{x_j} - \overline x } \right)} } }}{{\sum\limits_{i = 1}^n {{{\left( {{x_i} - \overline x } \right)}^2}} }}
 \end{displaymath}
 
 * N: The number of spatial units indexed by i and j
@@ -4141,7 +4419,7 @@ I = \frac{n}{{{S_0}}}\frac{{\sum\limits_{i = 1}^n {\sum\limits_{j = 1}^n {{w_{ij
 
 \newpage
 
-## Figure S17: Morans I results: United States - Alpha Wave, Dependent Variable
+## Figure S18: Morans I results: United States - Alpha Wave, Dependent Variable
 
 ```{r covidrisk_GWRF3b, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
 
@@ -4211,7 +4489,7 @@ ggarrange(p, p2, ncol = 1, nrow = 2, heights = c(2, 0.7))
 
 \newpage
 
-## Figure S18: Morans I results: United States - Alpha Wave, Independent Variables
+## Figure S19: Morans I results: United States - Alpha Wave, Independent Variables
 
 ```{r covidrisk_GWRF3, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
 
@@ -4631,7 +4909,7 @@ ggarrange(ageover65_mp_map, p2, ncol = 1, nrow = 2, heights = c(2, 0.7))
 
 ```
 
-## Figure S19: Morans I results: United States - Delta Wave, Dependent Variable
+## Figure S20: Morans I results: United States - Delta Wave, Dependent Variable
 
 ```{r covidrisk_GWRF4, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
 
@@ -4725,7 +5003,7 @@ dev.off()
 ```
 
 
-## Figure S20: Morans I results: United States - Delta Wave, Independent Variables
+## Figure S21: Morans I results: United States - Delta Wave, Independent Variables
 
 
 ```{r covidrisk_GWRF3_delta, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
@@ -5221,7 +5499,7 @@ ggarrange(ageover65_mp_map, p2, ncol = 1, nrow = 2, heights = c(2, 0.7))
 ```
 
 
-## Figure S21: Morans I results: United States - Omicron Wave, Dependent Variable
+## Figure S22: Morans I results: United States - Omicron Wave, Dependent Variable
 
 ```{r covidrisk_GWRF_omicron, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
 
@@ -5289,7 +5567,7 @@ ggarrange(p, p2, ncol = 1, nrow = 2, heights = c(2, 0.7))
 
 ```
 
-## Figure S22: Morans I results: United States - Omicron Wave, Independent Variables
+## Figure S23: Morans I results: United States - Omicron Wave, Independent Variables
 
 ```{r covidrisk_GWRF3_omicron, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
 
@@ -6209,7 +6487,7 @@ local_r2_residuals4 <- spplot(risk_final5, zcol="deaths_adjusted", col='transpar
 
 ```
 
-## Figure S23: GWRF Alpha Wave: Model Weighting
+## Figure S24: GWRF Alpha Wave: Model Weighting
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6224,7 +6502,7 @@ legend("topright", legend = c("L0, G1", "L.25, G.75", "L.50, G.50", "L.75, G.25"
 ```
 
 \newpage
-## Figure S24: GWRF Alpha Wave: Residuals vs. Predicted
+## Figure S25: GWRF Alpha Wave: Residuals vs. Predicted
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6247,7 +6525,7 @@ kable(cortest3, col.names = NULL, longtable = T, booktabs = T, align="c")%>%
 
 \newpage
 
-## Figure S25: GWRF Alpha Wave: Model Prediction Results
+## Figure S26: GWRF Alpha Wave: Model Prediction Results
 
 ```{r, include=FALSE,echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6285,7 +6563,7 @@ plotrf <- grid.arrange(local_r2, local_r2_residuals2,local_r2_residuals3,local_r
 
 ```
 
-## Figure S26: GWRF Alpha Wave: Feature Importance
+## Figure S27: GWRF Alpha Wave: Feature Importance
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6614,7 +6892,7 @@ local_r2_residuals4 <- spplot(risk_final5, zcol="deaths_adjusted", col='transpar
 
 ```
 
-## Figure S27: GWRF Delta Wave: Model Weighting
+## Figure S28: GWRF Delta Wave: Model Weighting
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6629,7 +6907,7 @@ legend("topright", legend = c("L0, G1", "L.25, G.75", "L.50, G.50", "L.75, G.25"
 
 \newpage
 
-## Figure S28: GWRF Delta Wave: Residuals vs. Predicted
+## Figure S29: GWRF Delta Wave: Residuals vs. Predicted
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6650,7 +6928,7 @@ kable(cortest3, col.names = NULL, longtable = T, booktabs = T, align="c")%>%
 
 \newpage
 
-## Figure S29: GWRF Delta Wave: Model Prediction Results
+## Figure S30: GWRF Delta Wave: Model Prediction Results
 
 ```{r, include=FALSE,echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -6690,7 +6968,7 @@ plotrf <- grid.arrange(local_r2, local_r2_residuals2,local_r2_residuals3,local_r
 
 ```
 
-## Figure S30: GWRF Delta Wave: Model Feature Importance
+## Figure S31: GWRF Delta Wave: Model Feature Importance
 
 ```{r, include=FALSE,echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7077,7 +7355,7 @@ local_r2_residuals4 <- spplot(risk_final5, zcol="deaths_adjusted", col='transpar
 
 ```
 
-## Figure S31: GWRF Omicron Wave: Model Weighting
+## Figure S32: GWRF Omicron Wave: Model Weighting
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7093,7 +7371,7 @@ legend("topright", legend = c("L0, G1", "L.25, G.75", "L.50, G.50", "L.75, G.25"
 
 \newpage
 
-## Figure S32: GWRF Omicron Wave: Residuals vs. Predicted
+## Figure S33: GWRF Omicron Wave: Residuals vs. Predicted
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7115,7 +7393,7 @@ kable(cortest3, col.names = NULL, longtable = T, booktabs = T, align="c")%>%
 
 \newpage
 
-## Figure S33: GWRF Omicron Wave: Model Prediction Results
+## Figure S34: GWRF Omicron Wave: Model Prediction Results
 
 ```{r, include=FALSE,echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7156,7 +7434,7 @@ plotrf <- grid.arrange(local_r2, local_r2_residuals2,local_r2_residuals3,local_r
 ```
 
 
-## Figure S34: GWRF Omicron Wave: Model Feature Importance
+## Figure S35: GWRF Omicron Wave: Model Feature Importance
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
