@@ -1,9 +1,9 @@
-## Supplemental Materials: Spatial Modeling of Sociodemographic Risk for COVID-19 Mortality
+## Supplemental Materials: Predictive Spatial Modeling of Sociodemographic Risk for COVID-19 Mortality
 
-Submitted February 2024 - Revision submitted September 2024
+Revision 6 material submitted July 2026
 
 Erich Seamon, Benjamin J. Ridenhour, Craig R. Miller, Jennifer Johnson-Leung
-University of Idaho, September 2024
+University of Idaho
 
 ## Overview:
 
@@ -11,7 +11,7 @@ The following github repository provides all code and data for generating analys
 
 ## How do I regenerate the Supplemental Appendix?
 
-- If you want to generate the supplemental appendix pdf on your own, you may run the Supplemental.Rmd (also at the root level).  All of the folders and datasets support running the Supplemnental.Rmd.  The published manuscript from the journal provides the fully compiled Supplemental Appendix pdf.
+- If you want to generate the supplemental appendix pdf on your own, you may run the Supplemental.Rmd (also at the root level).  All of the folders and datasets support running the Supplemental.Rmd.  The published manuscript from the journal provides the fully compiled Supplemental Appendix pdf.
 
 ## Folder Descriptions
 

@@ -1,7 +1,7 @@
 ---
 title: "Supplemental Materials: Predictive Spatial Modeling of Sociodemographic Risk for COVID-19 Mortality"
 author: "Erich Seamon, Benjamin J. Ridenhour, Craig R. Miller, Jennifer-Johnson Leung"
-date: "09/02/2025"
+date: "07/20/2026"
 always_allow_html: yes
 output:
   pdf_document:
@@ -24,9 +24,9 @@ header-includes:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=8.5)
-knitr::opts_knit$set(root.dir = "/mnt/ceph/erichs/git/COVIDriskpaper/")  # with something else than `getwd()`
+#knitr::opts_knit$set(root.dir = "/mnt/ceph/erichs/git/COVIDriskpaper/")  # with something else than `getwd()`
 #knitr::opts_knit$set(root.dir = "/Users/erichseamon/Dropbox/Mac/Documents/GitHub/COVIDriskpaper/")
-Sys.setenv(CHROMOTE_CHROME = "/mnt/ceph/erichs/chrome-bin/chrome-linux64/chrome")
+#Sys.setenv(CHROMOTE_CHROME = "/mnt/ceph/erichs/chrome-bin/chrome-linux64/chrome")
 ```
 \newpage
 # Appendix Overview
@@ -63,7 +63,7 @@ Our regional analysis examines COVID-19 parameters for the entire United States,
 
 * The third (3) and fourth (4) plots show the relationship of the four ideology groupings across the specified region, over time - examining deaths for a rolling window, as well as cumulative deaths.  These plots provide a summary view of the change in ideological and regional associations with cases and deaths.
 
-For each region, we have outputs for three linear linear models, with population adjusted deaths (by county) as the dependent variable - for each of the three time windows (alpha, delta, and omicron variant).  In addition, we have standardized coefficients graphs, that indicates the effect for each variable, for each model.
+For each region, we have outputs for three quasi-Poisson models, with population adjusted deaths (by county) as the dependent variable, for each of the three time windows (alpha, delta, and omicron variants). In addition, we have standardized coefficients graphs that summarize the coefficient estimate for each variable, for each model.
 
 \newpage
 
@@ -73,9 +73,9 @@ The second portion of this analysis evaluates the spatial autocorrelation of pop
 
 ## Part 5: Geographically Weighted Random Forest (GWRF) Modeling
 
-The third portion of this analysis attempts to model spatial variation for the entire United States, using geographically weighted random forest modeling (GWRF).  Our model incorporates the same independent variables that are used as part of our regionalized linear models. 
+The third portion of this analysis attempts to model spatial variation for the entire United States, using geographically weighted random forest modeling (GWRF).  Our model incorporates the same independent variables that are used as part of our regionalized quasi-Poisson regression models.
 
-Geographical Weighted Random Forest (GWRF) is a spatial analysis method using a local version of the Random Forest Regression Model. It allows for the investigation of spatial non-stationarity, and the relationship between a dependent and a set of independent variables. The latter is possible by fitting a sub-model for each observation in space, taking into account the neighboring observations. This technique adopts the idea of the Geographically Weighted Regression Kalogirou (2003). The main difference between a tradition (linear) GWR and GRF is that we can model non-stationarity coupled with a flexible non-linear model which is very hard to overfit due to its bootstrapping nature, thus relaxing the assumptions of traditional Gaussian statistics. Essentially it was designed to be a bridge between machine learning and geographical models, combining inferential and explanatory power. Additionally, it is suited for datasets with numerous predictors, due to the robust nature of the random forest algorithm with regards to high dimensionality.
+Geographical Weighted Random Forest (GWRF) is a spatial analysis method using a local version of the Random Forest Regression Model. It allows for the investigation of spatial non-stationarity, and the relationship between a dependent and a set of independent variables. The latter is possible by fitting a sub-model for each observation in space, taking into account the neighboring observations. This technique adopts the idea of the Geographically Weighted Regression Kalogirou (2003). The main difference between a tradition (linear) GWR and GRF is that we can model non-stationarity coupled with a flexible non-linear model which is very hard to overfit due to its bootstrapping nature, thus relaxing the assumptions of traditional Gaussian statistics. Essentially, it was designed to bridge machine learning and geographical models within a spatially explicit predictive framework. Additionally, it is suited for datasets with numerous predictors, due to the robust nature of the random forest algorithm with regards to high dimensionality.
 
 For this analysis, We generate GWRF localized model fits and feature importances (IncMSE).  The feature importance algorithmic process is:
 
@@ -4215,15 +4215,15 @@ Omicron_R <- as.character(USlist_R$omicron_pseudoR)
    DeltaR2 = Delta_R,
    Omicron = Omicronx,
    OmicronR2 = Omicron_R,
-   Map= c("\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region1.png}",
-           "\\includegraphics[valign = T,width=1.90cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region3.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region4.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region5.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region6.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region7.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region8.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region9.png}",
-           "\\includegraphics[valign = T,width=2cm]{/mnt/ceph/erichs/git/COVIDriskpaper/region_pngs/region10.png}"))
+   Map= c("\\includegraphics[valign = T,width=2cm]{./region_pngs/region1.png}",
+           "\\includegraphics[valign = T,width=1.90cm]{./region_pngs/region3.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region4.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region5.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region6.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region7.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region8.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region9.png}",
+           "\\includegraphics[valign = T,width=2cm]{./region_pngs/region10.png}"))
 
 
 sigtable <- knitr::kable(table, format = "latex",  escape = FALSE, booktabs=T) %>% column_spec(c(2,4,6), width = "1in") %>% column_spec(c(3,5,7), width = ".5in") %>% column_spec(8, width = ".5in") %>% kable_styling(full_width = FALSE, latex_options = "hold_position", font_size=8)
@@ -4395,11 +4395,11 @@ counties_merged@data <- cbind(counties_merged@data, rampcols)
 Morans I is a test of spatial autocorrelation.
 
 \begin{displaymath}
-I = \frac{n}{{{W}}}\frac{{\sum\limits_{i = 1}^n {\sum\limits_{j = 1}^n {{w_{ij}}\left( {{x_i} - \overline x } \right)\left( {{x_j} - \overline x } \right)} } }}{{\sum\limits_{i = 1}^n {{{\left( {{x_i} - \overline x } \right)}^2}} }}
+I = \frac{n}{{{S_0}}}\frac{{\sum\limits_{i = 1}^n {\sum\limits_{j = 1}^n {{w_{ij}}\left( {{x_i} - \overline x } \right)\left( {{x_j} - \overline x } \right)} } }}{{\sum\limits_{i = 1}^n {{{\left( {{x_i} - \overline x } \right)}^2}} }}
 \end{displaymath}
 
 * N: The number of spatial units indexed by i and j
-* W: The sum of all wij
+* $S_0$: The sum of all wij
 * x: The variable of interest (in this instance, cumulative COVID cases, adjusted for population)
 * x: The mean of x
 * wij: A matrix of spatial weights
