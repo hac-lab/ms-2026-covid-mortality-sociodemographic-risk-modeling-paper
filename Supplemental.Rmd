@@ -6580,13 +6580,13 @@ plotrf <- grid.arrange(RPL_THEME1, RPL_THEME2,RPL_THEME3,RPL_THEME4, nrow = 2, n
 ### Local Model Summary and goodness of fit statistics (training and OOB) 
 
 D <- data.frame(grf.model$LocalModelSummary[c(4,6)])
-colnames(D) <- c("Out of Bag R2", "Global R2")
+colnames(D) <- c("Out of Bag R2", "Global Fitted-Prediction R2")
 D <- kbl(D, booktabs = T, linesep = "") %>% kable_styling(latex_options = "HOLD_position")
 
 
 ```
 
-## Table T13: GWRF Alpha Wave OOB vs. Global R2
+## Table T13: GWRF Alpha Wave OOB vs. Global Fitted-Prediction R2
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7029,12 +7029,12 @@ plotrf <- grid.arrange(RPL_THEME1, RPL_THEME2,RPL_THEME3,RPL_THEME4, nrow = 2, n
      ### Local Model Summary and goodness of fit statistics (training and OOB) 
 
 D <- data.frame(grf.model$LocalModelSummary[c(4,6)])
-colnames(D) <- c("Out of Bag R2", "Global R2")
+colnames(D) <- c("Out of Bag R2", "Global Fitted-Prediction R2")
 D <- kbl(D, booktabs = T, linesep = "") %>% kable_styling(latex_options = "HOLD_position")
 
 ```
 
-## Table T14: GWRF Delta Wave: OOB vs Global R2
+## Table T14: GWRF Delta Wave: OOB vs Global Fitted-Prediction R2
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -7451,12 +7451,12 @@ plotrf <- grid.arrange(RPL_THEME1, RPL_THEME2,RPL_THEME3,RPL_THEME4, nrow = 2, n
      ### Local Model Summary and goodness of fit statistics (training and OOB) 
 
 D <- data.frame(grf.model$LocalModelSummary[c(4,6)])
-colnames(D) <- c("Out of Bag R2", "Global R2")
+colnames(D) <- c("Out of Bag R2", "Global Fitted-Prediction R2")
 D <- kbl(D, booktabs = T, linesep = "") %>% kable_styling(latex_options = "HOLD_position")
 
 ```
 
-## Table T15: GWRF Omicron Wave: OOB vs Global R2
+## Table T15: GWRF Omicron Wave: OOB vs Global Fitted-Prediction R2
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
